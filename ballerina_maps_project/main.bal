@@ -27,8 +27,8 @@ import ballerina/math;
 //distance matrix api to find the closest agent
 
 public function main() {
-    createTable();
-    saveAgentRecords();
+    //createTable();
+    //saveAgentRecords();
     var addressInput = io:readln("enter your address here: ");
     string currentAddress = string.convert(addressInput);
 
