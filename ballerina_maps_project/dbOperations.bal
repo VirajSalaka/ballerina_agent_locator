@@ -19,10 +19,11 @@ mysql:Client testDB = new({
 
 //create table
 function createTable(){
-    var ret = testDB->update("CREATE TABLE agent(id INT AUTO_INCREMENT,
+    var ret = testDB->update("DROP TABLE AGENT");
+    ret = testDB->update("CREATE TABLE agent(id INT AUTO_INCREMENT,
                           place_id VARCHAR(255), address VARCHAR(255), lat VARCHAR(255), 
                           lng VARCHAR(255), PRIMARY KEY (id))");
-    handleUpdate(ret, "Created agent table");
+    handleUpdate(ret, "Agent table is created successfully");
 }
 
 //add entry to the table
@@ -37,7 +38,7 @@ function addEntryToTable(string[] locationDetails){
     sqlString = sqlString + "'" + locationDetails[3] + "'" + ")" ;
     
     var ret = testDB->update(sqlString);
-    handleUpdate(ret, "Insert to agent table with four parameters");
+    handleUpdate(ret, locationDetails[1]);
 }
 
 //to retrieve all the entries
@@ -48,8 +49,6 @@ function retrieveAllEntries() returns (json){
         io:println("\nConvert the table into json");
         var jsonConversionRet = json.convert(selectRet);
         if (jsonConversionRet is json) {
-            //io:print("JSON: ");
-            //io:println(io:sprintf("%s", jsonConversionRet));
             return jsonConversionRet;
         } else {
             io:println("Error in table to json conversion");

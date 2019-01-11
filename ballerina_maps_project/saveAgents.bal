@@ -2,8 +2,8 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/io;
 
-function saveAgentRecords(){
-    string srcFileName = "./files/sample.csv";
+function saveAgentRecords(string filename){
+    string srcFileName = filename;
 
     io:ReadableCSVChannel rCsvChannel = io:openReadableCsvFile(srcFileName);
     io:println("Start processing the CSV file from ", srcFileName);
@@ -30,6 +30,7 @@ function process(io:ReadableCSVChannel csvChannel) returns error? {
         
         }
     }
+    io:println("    --------------   ");
     return;
 }
 

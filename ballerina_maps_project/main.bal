@@ -4,31 +4,35 @@ import ballerina/io;
 import ballerina/mysql;
 import ballerina/math;
 
-// http:Client clientEndpoint = new("https://maps.googleapis.com/maps/api/geocode/json?address=");
-
-// mysql:Client testDB = new({
-//         host: "remotemysql.com",
-//         name: "66tDPdlh6q",
-//         username: "66tDPdlh6q",
-//         password: "P0bxw66zIp"
-//     });
-
-
-//todo: read list of addresses from a file
-//provide an address as a commandline argument
-//implement the function to do the calculation
-//output print in terminal
-//read the addresses from a spreadsheet
-
-//extended
-//send it as a message 
-
-//extended
-//distance matrix api to find the closest agent
 
 public function main() {
-    //createTable();
-    //saveAgentRecords();
+    
+    string addFileFlag = io:readln("do you need to add the agent location csv file?(yes or no): ");
+
+    if (addFileFlag.equalsIgnoreCase("yes") || addFileFlag.equalsIgnoreCase("y")) {
+            string filename = io:readln("please mention the file name");
+            createTable();
+            saveAgentRecords("./files/" + filename);
+    }else if (addFileFlag.equalsIgnoreCase("no") || addFileFlag.equalsIgnoreCase("n")) {
+
+    }
+    else{
+        while(!(addFileFlag.equalsIgnoreCase("yes") || addFileFlag.equalsIgnoreCase("y") || 
+            addFileFlag.equalsIgnoreCase("no") || addFileFlag.equalsIgnoreCase("n"))){
+            if (addFileFlag.equalsIgnoreCase("yes") || addFileFlag.equalsIgnoreCase("y")) {
+                string filename = io:readln("please mention the file name");
+                createTable();
+                saveAgentRecords("./files/" + filename);
+                break;
+            }else if (addFileFlag.equalsIgnoreCase("no") || addFileFlag.equalsIgnoreCase("n")) {
+                break;
+            }else{
+                addFileFlag = io:readln("answer is not valid, please say yes or no. : ");
+                continue;
+            }
+        }
+    }
+
     var addressInput = io:readln("enter your address here: ");
     string currentAddress = string.convert(addressInput);
 
@@ -46,27 +50,47 @@ public function main() {
     int i = 0;
     int l = addressList.length();
 
-    while (i < l){
-        json searchResult = addressList[i];
+    string[] addressArray = [];
 
-        var jsonPlace_id = searchResult.place_id;
-        var jsonAddress = searchResult.address;
-        var jsonLatitude = searchResult.lat;
-        var jsonLongitude = searchResult.lng;
+    var rawDistance = io:readln("enter the radius of area you need to calculate (in meters) ");
 
-        string|error agentAddress = string.convert(jsonAddress);
-        float|error agentLatitude = float.convert(jsonLatitude);
-        float|error agentLongitude = float.convert(jsonLongitude);
+    float|error radius = float.convert(rawDistance);
 
-        if(latitude is float && longitude is float && agentLatitude is float && agentLongitude is float){
-            float distance = computetwoAgentDistance(latitude, longitude, agentLatitude, agentLongitude);
-            if(distance < 10000){
-                io:println(agentAddress);
-            }
+    while (radius is error){
+        var secondRawDistance = io:readln("entered value is not valid. please enter a valid number in meters ");
+        float|error secondRadius = float.convert(secondRawDistance);
+
+        if(secondRadius is float){
+            radius = secondRadius;
         }
 
-        i = i+1;
     }
+    if(radius is float){
+        while (i < l){
+            json searchResult = addressList[i];
+
+            var jsonPlace_id = searchResult.place_id;
+            var jsonAddress = searchResult.address;
+            var jsonLatitude = searchResult.lat;
+            var jsonLongitude = searchResult.lng;
+
+            string|error agentAddress = string.convert(jsonAddress);
+            float|error agentLatitude = float.convert(jsonLatitude);
+            float|error agentLongitude = float.convert(jsonLongitude);
+
+            if(latitude is float && longitude is float && agentLatitude is float && agentLongitude is float){
+                float distance = computetwoAgentDistance(latitude, longitude, agentLatitude, agentLongitude);
+                if(distance < radius){
+                    if(agentAddress is string){
+                        addressArray[addressArray.length()] = agentAddress;
+                    }
+                }
+            }
+
+            i = i+1;
+        }
+    }
+    
     
 }
 
