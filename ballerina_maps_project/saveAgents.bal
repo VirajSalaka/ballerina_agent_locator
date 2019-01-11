@@ -2,6 +2,7 @@ import ballerina/http;
 import ballerina/log;
 import ballerina/io;
 
+//to read the csv file
 function saveAgentRecords(string filename){
     string srcFileName = filename;
 
@@ -17,23 +18,27 @@ function saveAgentRecords(string filename){
     closeReadableCSVChannel(rCsvChannel);
 }
 
+//add entries to the databases after reading the csv
 function process(io:ReadableCSVChannel csvChannel) returns error? {
     while (csvChannel.hasNext()) {
         var records = check csvChannel.getNext();
         if (records is string[]) {
             string address = makeUntaintedString(records[3]);
+
+            //fetch the location details for the provided address in the csv file
             string[] locationDetails = locationFetch(address);
 
+            //insert records to the database
             if(locationDetails.length() > 0){
                 addEntryToTable(locationDetails);
             }
-        
         }
     }
     io:println("    --------------   ");
     return;
 }
 
+//close the csv file
 function closeReadableCSVChannel(io:ReadableCSVChannel csvChannel) {
     var result = csvChannel.close();
     if (result is error) {
@@ -42,6 +47,7 @@ function closeReadableCSVChannel(io:ReadableCSVChannel csvChannel) {
     }
 }
 
+//to make the string untainted
 function makeUntaintedString(string _string) returns @untainted string{
     return _string;
 }

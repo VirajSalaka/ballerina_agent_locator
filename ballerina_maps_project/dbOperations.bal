@@ -4,12 +4,13 @@ import ballerina/io;
 import ballerina/mysql;
 import ballerina/config;
 
-
+//Database configuration details
 string dbHost = config:getAsString("DB_SERVER");
 string name = config:getAsString("DB_NAME");
 string username = config:getAsString("DB_USERNAME");
 string password = config:getAsString("DB_PASSWORD");
 
+//create a mysql client
 mysql:Client testDB = new({
         host: dbHost,
         name: name,
@@ -17,9 +18,13 @@ mysql:Client testDB = new({
         password: password
     });
 
-//create table
+//create agent table
 function createTable(){
+
+    //drop the table, if there is an agent table
     var ret = testDB->update("DROP TABLE AGENT");
+
+    //create the agent table
     ret = testDB->update("CREATE TABLE agent(id INT AUTO_INCREMENT,
                           place_id VARCHAR(255), address VARCHAR(255), lat VARCHAR(255), 
                           lng VARCHAR(255), PRIMARY KEY (id))");
@@ -41,18 +46,25 @@ function addEntryToTable(string[] locationDetails){
     handleUpdate(ret, locationDetails[1]);
 }
 
-//to retrieve all the entries
+//to retrieve all the entries as a json
 function retrieveAllEntries() returns (json){
+    
+    //select entries from the database
     var selectRet = testDB->select("SELECT * FROM agent", ());
 
     if (selectRet is table<record {}>) {
+
         io:println("\nConvert the table into json");
+
+        //convert the table record into a json
         var jsonConversionRet = json.convert(selectRet);
+
         if (jsonConversionRet is json) {
             return jsonConversionRet;
         } else {
             io:println("Error in table to json conversion");
         }
+
     } else {
         io:println("Select data from student table failed: "
                 + <string>selectRet.detail().message);
@@ -60,6 +72,7 @@ function retrieveAllEntries() returns (json){
 
     return null;
 }
+
 //to check the status of the database operation
 function handleUpdate(int|error returned, string message) {
     if (returned is int) {
