@@ -1,6 +1,5 @@
 target/
 ballerina.conf
-files/
 remote_DB.txt
 .DS_Store
 .ballerina
