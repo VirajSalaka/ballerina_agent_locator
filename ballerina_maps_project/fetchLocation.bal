@@ -47,7 +47,7 @@ function locationFetch(string address) returns @untainted string[]{
                 }
 
                 //pick the correct address by the index as provided by the user
-                var firstInput = io:readln("pick one address from the above, and enter the number");
+                var firstInput = io:readln("pick one address from the above, and enter the number : ");
                 int|error resultNumber = int.convert(firstInput);
 
                 if(resultNumber is int){
@@ -72,7 +72,7 @@ function locationFetch(string address) returns @untainted string[]{
                                 return [place_id.toString(), address, lat.toString(), lng.toString()];
                         }
 
-                        var secondInput = io:readln("Entered number is not valid, and please enter the number again.");
+                        var secondInput = io:readln("Entered number is not valid, and please enter the number again. : ");
                         int|error resultNumber2 = int.convert(secondInput);
 
                         if(resultNumber2 is int){

@@ -5,7 +5,7 @@ Background :
     provided, the user can find the nearby agents using this application. In this implemntation,
     we are using ballerina, mysql  and google geocoding API.
 
-![Overview](component_diagram.jpg)
+![Overview](https://drive.google.com/open?id=1qE_YpwcjGZlBLEmL5PArYIpWH9OrS3GT)
 
 ### Getting started
 

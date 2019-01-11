@@ -13,7 +13,7 @@ public function main() {
     if (addFileFlag.equalsIgnoreCase("yes") || addFileFlag.equalsIgnoreCase("y")) {
 
             //add file name
-            string filename = io:readln("please mention the file name");
+            string filename = io:readln("please mention the file name : ");
 
             //create table agent
             createTable();
@@ -33,7 +33,7 @@ public function main() {
             addFileFlag.equalsIgnoreCase("no") || addFileFlag.equalsIgnoreCase("n"))){
 
             if (addFileFlag.equalsIgnoreCase("yes") || addFileFlag.equalsIgnoreCase("y")) {
-                string filename = io:readln("please mention the file name");
+                string filename = io:readln("please mention the file name : ");
                 createTable();
                 saveAgentRecords("./files/" + filename);
                 break;
