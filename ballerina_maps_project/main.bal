@@ -57,6 +57,10 @@ public function main() {
     //to retrieve place_id, formatted address, and latlang using the google API
     string[] currentLocationDetails = locationFetch(currentAddress);
 
+    if(currentLocationDetails.length() == 1 || currentLocationDetails.length() == 0){
+        io:println("location cannot be fetched, press ctrl+z");
+    }
+
     //to convert the string values
     string place_id = currentLocationDetails[0];
     string address = currentLocationDetails[1];
@@ -125,7 +129,8 @@ public function main() {
     foreach var item in addressArray {
         io:println(item);
     }
-    
+    io:println();
+    io:println("count is : " + addressArray.length());
 }
 
 
