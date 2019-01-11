@@ -20,6 +20,9 @@ function saveAgentRecords(string filename){
 
 //add entries to the databases after reading the csv
 function process(io:ReadableCSVChannel csvChannel) returns error? {
+
+    string[] notEnteredAddresses = [];
+
     while (csvChannel.hasNext()) {
         var records = check csvChannel.getNext();
         if (records is string[]) {
@@ -30,11 +33,24 @@ function process(io:ReadableCSVChannel csvChannel) returns error? {
 
             //insert records to the database
             if(locationDetails.length() > 0){
-                addEntryToTable(locationDetails);
+                if(locationDetails.length()==1){
+                    notEnteredAddresses[notEnteredAddresses.length()] = locationDetails[0];
+                }
+                else{
+                    addEntryToTable(locationDetails);
+                }
             }
         }
     }
     io:println("    --------------   ");
+
+    io:println("following addresses are not added");
+
+    int count = 1;
+    foreach var item in notEnteredAddresses {
+        io:println(count + " : " + item);
+        count = count + 1;
+    }
     return;
 }
 

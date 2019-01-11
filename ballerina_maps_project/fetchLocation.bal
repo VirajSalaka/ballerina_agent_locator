@@ -31,7 +31,7 @@ function locationFetch(string address) returns @untainted string[]{
             //if there are no results for the address record, return
             if(r.results.length() == 0){
                 io:println("error -- could not receive the location : " + address);
-                return [];
+                return ["address"];
             }
 
             //if there are more than one result for the given address, user has to pick the correct one
